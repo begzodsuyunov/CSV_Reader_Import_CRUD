@@ -1,0 +1,157 @@
+﻿@model IEnumerable<EmployeeSynelTest.Models.Employee>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<div>
+    @using (Html.BeginForm())
+    {
+        <div class="form-inline">
+            <div class="form-group">
+                @Html.TextBox("Forenames", "", new { @class = "form-control", placeholder = "Forenames" })
+            </div>
+            <div class="form-group">
+                @Html.TextBox("Surname", "", new { @class = "form-control", placeholder = "Surname" })
+            </div>
+
+            <button type="submit" class="btn btn-primary">Filter</button>
+
+        </div>
+
+    }
+</div>
+<div class="row">
+
+    <div class="col-md-4">
+        @if (TempData["RowsAdded"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["RowsAdded"] rows have been successfully added.
+            </div>
+        }
+        @using (Html.BeginForm("ImportCsv", "Employee", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.Label("Import CSV", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-8">
+                    @Html.TextBox("csvFile", "", new { @class = "form-control", type = "file" })
+                </div>
+                <div class="col-md-2">
+                    <input type="submit" value="Import" class="btn btn-primary" />
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+<p>
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success", style = "color: white;" })
+</p>
+<table class="table" id="datatable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Payroll_Number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Forenames)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date_of_Birth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telephone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mobile)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address_2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Postcode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EMail_Home)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Start_Date)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Payroll_Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Forenames)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Surname)
+            </td>
+            <td>
+                @item.Date_of_Birth.ToShortDateString()
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telephone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address_2)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Postcode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EMail_Home)
+            </td>
+            <td>
+                @item.Start_Date.ToShortDateString()
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-primary", style = "color: white;" })
+                @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-primary", style = "color: white; background-color: gray;" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-danger", style = "color: white;" })
+            </td>
+
+
+
+        </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts{
+    <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/af-2.6.0/datatables.min.css" rel="stylesheet">
+    <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/af-2.6.0/datatables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#datatable").DataTable({
+                "columnDefs": [
+                    { "orderable": false, "targets": [3, 6, 7, 10, 11] } //removing unnecessary sort options
+                ],
+                "order": [[2, 'asc']] // 2 corresponds to the Surname column, 'asc' for ascending
+            });
+        });
+    </script>
+}
